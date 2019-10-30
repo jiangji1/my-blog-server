@@ -6,8 +6,9 @@ const dbFn = require('./db')
 router.get('/list', function(req, res, next) {
   // res.render('index', { title: 'Express' });
   const db = dbFn()
-  const page = 0 || 0
-  const size = -1 || -1
+  const page = +req.query.page || 0
+  const size = +req.query.size || 10
+  // res.send()
   const word = `select * from list limit ${page * size},${size};`
   db.query(word, function (err, data, fields) {
     if (err) {
