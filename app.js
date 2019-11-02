@@ -3,6 +3,9 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var multer  = require('multer')
+// var upload = multer({ dest: '/uploads/' })
+// var formidable = require('./node_modules/formidable')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -18,10 +21,11 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/static', express.static(path.join(__dirname, 'static')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+// app.use('/edit/save', upload.single('avatar'), editSave);
 app.use('/edit/save', editSave);
 
 // catch 404 and forward to error handler

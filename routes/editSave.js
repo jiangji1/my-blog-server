@@ -7,36 +7,48 @@ const formidable = require("formidable");
 
 /* GET home page. */
 router.post('/', function(req, res, next) {
-
   var form = new formidable.IncomingForm();
-  var uploadDir = path.normalize(__dirname+'/'+"../avatar");
+  var uploadDir = path.normalize(__dirname+'/'+"../static");
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir);
+  }
   form.uploadDir = uploadDir
+  let names = []
   form.parse(req, function(err, fields, files) {
-    for(item in files){
+    console.log(fields)
+    for(i in files){
       (function(){
-        var oldname = files[item].path
-        var newname = files[item].name === 'blob' ? oldname+'.xml' : oldname+"."+files[item].name.split('.')[1]
+        var oldname = files[i].path
+        var newname = files[i].name === 'blob' ? oldname+'.xml' : oldname+"."+files[i].name.split('.')[1]
+        names.push(newname)
         fs.rename(oldname,newname,function(err){
           if(err) console.log(err)
-          console.log('修改成功')
+          // console.log('newname', newname)
         })
-      })(item)
+      })(i)
     }
-    console.log({fields: fields, files: files})
-    res.send('2')
+    let str = fields.str
+    let keyword = fields.keyword
+    let imgs = Object.getOwnPropertyNames(files).filter(v => v !== 'str')
+    imgs = imgs.map(v => files[v].path.replace(path.join(__dirname, '../'), '\\'))
+    imgs.forEach( (v, i) => {
+      str = str.replace(/str.replace,jiangji123/, names[i])
+    })
+    str = str.replace(path.join(__dirname, '../'), '.\\')
+    const db = dbFn()
+    console.log(str)
+    str = str.replace(/\\(?!\\)/g, '\\\\')
+    console.log(str)
+    const word = `insert into list (keyword, str) values ('${keyword}', '${str}');`
+    db.query(word, function (err, data, fields) {
+      if (err) {
+        console.log(err)
+        return res.send(err)
+      }
+      res.send(str)
+    })
   })
 
-  // const db = dbFn()
-  // const page = 0 || 0
-  // const size = -1 || -1
-  // const word = `select * from list limit ${page * size},${size};`
-  // db.query(word, function (err, data, fields) {
-  //   if (err) {
-  //     return res.send(err)
-  //   }
-  //   console.log(data)
-  //   res.send(data)
-  // })
 });
 
 module.exports = router;
