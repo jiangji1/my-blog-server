@@ -8,7 +8,7 @@ router.get('/list', function(req, res, next) {
   const db = dbFn()
   const page = +req.query.page || 0
   const size = +req.query.size || 10
-  // res.send()
+  // res.send()git 
   const word = `select title, keyword, str from list limit ${page * size},${size};`
   db.query(word, function (err, data, fields) {
     if (err) {
