@@ -29,6 +29,7 @@ router.post('/', function(req, res, next) {
     }
     let str = fields.str
     let keyword = fields.keyword
+    let title = fields.title
     let imgs = Object.getOwnPropertyNames(files).filter(v => v !== 'str')
     imgs = imgs.map(v => files[v].path.replace(path.join(__dirname, '../'), '\\'))
     imgs.forEach( (v, i) => {
@@ -39,7 +40,7 @@ router.post('/', function(req, res, next) {
     console.log(str)
     str = str.replace(/\\(?!\\)/g, '\\\\')
     console.log(str)
-    const word = `insert into list (keyword, str) values ('${keyword}', '${str}');`
+    const word = `insert into list (keyword, title, str) values ('${keyword}', '${title}', '${str}');`
     db.query(word, function (err, data, fields) {
       if (err) {
         console.log(err)
