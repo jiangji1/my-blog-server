@@ -10,6 +10,7 @@ var multer  = require('multer')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var editSave = require('./routes/editSave');
+var detail = require('./routes/detail');
 
 var app = express();
 
@@ -23,10 +24,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use('/static', express.static(path.join(__dirname, 'static')));
 
-app.use('/api', indexRouter);
+app.use('/api/list', indexRouter);
+app.use('/api/detail', detail);
 app.use('/users', usersRouter);
 // app.use('/edit/save', upload.single('avatar'), editSave);
-app.use('/edit/save', editSave);
+app.use('api/edit/save', editSave);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
