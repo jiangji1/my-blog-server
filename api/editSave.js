@@ -1,12 +1,18 @@
 const path = require('path')
 const express = require('express');
 const router = express.Router();
-const dbFn = require('./db')
 const fs = require('fs');
 const formidable = require("formidable");
 
 /* GET home page. */
 router.post('/', function(req, res, next) {
+  const token = req.headers.token
+  console.log(token)
+  console.log(global.token)
+  if (!global.token[token]) {
+    res.send('无权限')
+    return
+  }
   var form = new formidable.IncomingForm();
   var uploadDir = path.normalize(__dirname+'/'+"../static");
   if (!fs.existsSync(uploadDir)) {
@@ -37,16 +43,19 @@ router.post('/', function(req, res, next) {
     })
     str = str.replace(path.join(__dirname, '../'), '.\\')
     const db = dbFn()
-    console.log(str)
+    // console.log(str)
     str = str.replace(/\\(?!\\)/g, '\\\\')
-    console.log(str)
+    // console.log(str)
     const word = `insert into list (keyword, title, str) values ('${keyword}', '${title}', '${str}');`
     db.query(word, function (err, data, fields) {
       if (err) {
-        console.log(err)
+        console.log('err', err)
         return res.send(err)
       }
-      res.send(str)
+      res.send({
+        success: true,
+        str
+      })
     })
   })
 

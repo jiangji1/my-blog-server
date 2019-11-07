@@ -1,10 +1,14 @@
 var express = require('express');
 var router = express.Router();
-const dbFn = require('./db')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   // res.render('index', { title: 'Express' });
+  const token = req.headers.token
+  if (!global.token[token]) {
+    res.send('无权限')
+    return
+  }
   const db = dbFn()
   const page = +req.query.page || 0
   const size = +req.query.size || 10
@@ -15,7 +19,16 @@ router.get('/', function(req, res, next) {
       return res.send(err)
     }
     console.log(data)
-    res.send(data)
+    if (global.token[token]) {
+      res.send({
+        list: data,
+        power: 'all'
+      })
+      return
+    }
+    res.send({
+      list: data
+    })
   })
 });
 

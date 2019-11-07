@@ -4,13 +4,12 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var multer  = require('multer')
+var dbFn = require('./api/db')
+global.dbFn = dbFn
 // var upload = multer({ dest: '/uploads/' })
 // var formidable = require('./node_modules/formidable')
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var editSave = require('./routes/editSave');
-var detail = require('./routes/detail');
+
 
 var app = express();
 
@@ -24,11 +23,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use('/static', express.static(path.join(__dirname, 'static')));
 
-app.use('/api/list', indexRouter);
-app.use('/api/detail', detail);
-app.use('/users', usersRouter);
-// app.use('/edit/save', upload.single('avatar'), editSave);
-app.use('api/edit/save', editSave);
+global.token = {}
+
+const routerPath = [
+  '/api/list',
+  '/api/login',
+  '/api/editSave',
+  '/api/detail',
+]
+
+routerPath.forEach(v => {
+  app.use(v, require('.' + v))
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
