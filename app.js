@@ -21,9 +21,11 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use('/static', express.static(path.join(__dirname, 'static')));
+app.use('/static', express.static(path.join(__dirname, '/static')));
 
-global.token = {}
+global.token = {
+  '49afcc8f7496336b1d2d18ee327e46f7': true
+}
 
 const routerPath = [
   '/api/list',
