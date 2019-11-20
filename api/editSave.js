@@ -4,10 +4,8 @@ const router = express.Router();
 const fs = require('fs');
 const formidable = require("formidable");
 
-/* GET home page. */
 router.post('/', function(req, res, next) {
   const token = req.headers.token
-  // console.log(token)
   // console.log(global.token)
   if (!global.token[token]) {
     res.send('无权限')

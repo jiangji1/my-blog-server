@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
   const db = dbFn()
   const id = +req.query.id || 0
@@ -10,7 +9,6 @@ router.get('/', function(req, res, next) {
     if (err) {
       return res.send(err)
     }
-    // console.log(data)
     res.send(data)
   })
 });
