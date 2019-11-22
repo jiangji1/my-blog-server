@@ -10,6 +10,7 @@ router.get('/', function(req, res, next) {
     if (err) {
       return res.send(err)
     }
+    const token = req.headers.token
     res.send({
       list: data,
       power: global.token[token] && 'all',

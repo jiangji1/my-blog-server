@@ -9,11 +9,8 @@ global.dbFn = dbFn
 // var upload = multer({ dest: '/uploads/' })
 // var formidable = require('./node_modules/formidable')
 
-
-
 var app = express();
 
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
@@ -27,11 +24,22 @@ global.token = {
   '49afcc8f7496336b1d2d18ee327e46f7': true
 }
 
+app.all('*', function (req, res, next) {
+  // res.header("Access-Control-Allow-Credentials", true)
+  res.header("Access-Control-Allow-Origin", req.headers.origin)
+  // res.header("X-Powered-By", ' 3.2.1')
+  // res.header("Content-Type", "application/json;charset=utf-8")
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,token');
+  next()
+})
+
 const routerPath = [
   '/api/list',
   '/api/login',
   '/api/editSave',
   '/api/detail',
+  '/api/del',
 ]
 
 routerPath.forEach(v => {
